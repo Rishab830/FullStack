@@ -1,0 +1,101 @@
+body {
+    background: #181818;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+}
+.container {
+    background: #232323;
+    padding: 2.5rem 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 40px #000c;
+    color: #ff8000;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.title {
+    font-size: 2rem;
+    color: #ff8000;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+.form-group {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+label {
+    display: block;
+    margin-bottom: 0.7rem;
+    color: #ff8000;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border-radius: 0.5rem;
+    background: #272727;
+    border: none;
+    color: #ffbe8f;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: box-shadow 0.17s;
+}
+input:focus {
+    box-shadow: 0 0 0 2px #ff800080;
+}
+#strength-bar {
+    height: 6px;
+    border-radius: 3px;
+    transition: background 0.19s;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    background: #393939;
+}
+.btn {
+    width: 100%;
+    padding: 0.75rem 0;
+    background: linear-gradient(90deg, #ff8000 80%, #ffad42 100%);
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 1.2rem;
+    color: #232323;
+    margin: 0.9rem 0 0.25rem 0;
+    cursor: pointer;
+    transition: background 0.17s, color 0.17s;
+    letter-spacing: 1px;
+}
+.btn:hover {
+    background: linear-gradient(90deg, #ffbe8f 60%, #ff8000 100%);
+    color: #232323;
+}
+.error-msg {
+    color: #ff4433;
+    font-size: 1rem;
+    min-height: 1.2rem;
+    margin-bottom: 0.25rem;
+    text-align: center;
+}
+.footer-link {
+    color: #ffad42;
+    font-size: 0.99rem;
+    text-decoration: none;
+    margin-top: 1.2rem;
+    display: inline-block;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.footer-link:hover {
+    color: #fff;
+}

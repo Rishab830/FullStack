@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - Black & Orange</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="title">Sign Up</div>
+    <form id="signupForm" autocomplete="off">
+      <div class="form-group">
+        <label for="signupUsername">Username</label>
+        <input id="signupUsername" type="text" required placeholder="Choose a username">
+      </div>
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" type="password" required placeholder="Create a password">
+        <div id="strength-bar"></div>
+      </div>
+      <div class="error-msg" id="signupError"></div>
+      <button class="btn" type="submit">Sign Up</button>
+    </form>
+    <a class="footer-link" href="login.html">Already have an account? Login</a>
+    <a class="footer-link" href="home.html">← Home</a>
+  </div>
+
+  <script src="signup.js"></script>
+</body>
+</html>

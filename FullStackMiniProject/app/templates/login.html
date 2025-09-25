@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - BidHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="../static/styles.css"/>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">
+      <i class="fas fa-gavel"></i> BidHub
+    </a>
+    <div class="nav-links">
+      <a href="/">
+        <i class="fas fa-home"></i> Home
+      </a>
+    </div>
+  </nav>
+
+  <div class="auth-container">
+    <div class="auth-box">
+      <div class="auth-header">
+        <h1>Welcome to BidHub</h1>
+        <p>Join our community of buyers and sellers</p>
+      </div>
+      <div class="auth-toggle">
+        <button type="button" class="active">Login</button>
+        <a href="/signup"><button type="button">Sign Up</button></a>
+      </div>
+      <div id="loginForm" class="auth-form">
+        <form action="/auth" method="post">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required/>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required/>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="rememberMe" name="remember"/>
+            <label for="rememberMe">Remember me</label>
+          </div>
+          <span style="color: red;" name="login_error" id="login_error"></span>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('login_error').innerHTML = '{{ login_error }}'
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+html {
+    width: 800px;
+    margin: auto;
+    
+}
+h1 {
+    color: rgb(14, 84, 129);
+    text-align: center;
+    margin-bottom: 0cm;
+    margin-top: 1cm;
+    font-size: 20px;
+}
+h2 {
+    color: rgb(14, 84, 129);
+    font-size: 19px;
+    margin-left: 5%;
+    margin-top: 0cm;
+    margin-bottom: 0cm;
+}
+p {
+    margin-left: 5%;
+    margin-right: 5%;
+    
+}
+table {
+    font-size: 14px;
+    margin-left: 5%;
+}
+.index {
+    color: rgb(14, 84, 129);
+    margin-right: 0cm;
+    padding-right: 3cm;
+    padding-bottom: 0.25cm
+}
+.links {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 1cm;
+}

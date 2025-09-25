@@ -1,0 +1,165 @@
+<!-- seller.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Dashboard - BidHub</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link rel="stylesheet" href="../static/styles.css"/>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">
+      <i class="fas fa-gavel"></i> BidHub
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('buyer', name=name) }}">
+        <i class="fas fa-shopping-cart"></i> Buyer
+      </a>
+      <a href="{{ url_for('seller', name=name) }}" class="active">
+        <i class="fas fa-plus-circle"></i> Seller
+      </a>
+    </div>
+    <div class="user-info">
+      <span>Welcome, <span id="name"></span>!</span>
+      <a href="/" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="page-header">
+      <h1><i class="fas fa-plus-circle"></i> List New Item for Auction</h1>
+      <p>
+        Create a listing for your item and start receiving bids from interested
+        buyers.
+      </p>
+    </div>
+
+    <div class="tips-section">
+      <h3><i class="fas fa-lightbulb"></i> Tips for Successful Listings</h3>
+      <ul class="tips-list">
+        <li><i class="fas fa-check"></i> Use clear, high-quality photos</li>
+        <li><i class="fas fa-check"></i> Write detailed descriptions</li>
+        <li><i class="fas fa-check"></i> Set a competitive starting price</li>
+        <li><i class="fas fa-check"></i> Choose an appropriate duration</li>
+        <li><i class="fas fa-check"></i> Be honest about flaws</li>
+      </ul>
+    </div>
+
+    <div class="seller-form">
+      <form id="productForm" action="{{ url_for('buyer', name=name) }}" method="get">
+        <div class="form-group">
+          <label for="productTitle"><i class="fas fa-tag"></i> Product Title</label>
+          <input
+            type="text"
+            id="productTitle"
+            name="title"
+            placeholder="Enter a descriptive title"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
+          <textarea
+            id="productDescription"
+            name="description"
+            placeholder="Provide detailed information"
+            required
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-image"></i> Product Image</label>
+          <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Click to upload product image</p>
+            <small>JPG, PNG, GIF (Max 5MB)</small>
+          </div>
+          <input type="file" id="imageInput" name="image" accept="image/*" class="hidden"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="startingPrice"><i class="fas fa-dollar-sign"></i> Starting Price</label>
+            <input
+              type="number"
+              id="startingPrice"
+              name="startingPrice"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="auctionDuration"><i class="fas fa-clock"></i> Auction Duration</label>
+            <select id="auctionDuration" name="duration" required>
+              <option value="">Select duration</option>
+              <option value="1">1 Day</option>
+              <option value="3">3 Days</option>
+              <option value="5">5 Days</option>
+              <option value="7" selected>7 Days</option>
+              <option value="10">10 Days</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category"><i class="fas fa-folder"></i> Category</label>
+            <select id="category" name="category" required>
+              <option value="">Select category</option>
+              <option value="electronics">Electronics</option>
+              <option value="fashion">Fashion</option>
+              <option value="home">Home & Garden</option>
+              <option value="sports">Sports</option>
+              <option value="art">Art & Collectibles</option>
+              <option value="books">Books & Media</option>
+              <option value="jewelry">Jewelry & Watches</option>
+              <option value="vehicles">Vehicles</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="condition"><i class="fas fa-star"></i> Condition</label>
+            <select id="condition" name="condition" required>
+              <option value="">Select condition</option>
+              <option value="new">New</option>
+              <option value="like-new">Like New</option>
+              <option value="excellent">Excellent</option>
+              <option value="good">Good</option>
+              <option value="fair">Fair</option>
+              <option value="poor">Poor</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-gavel"></i> List Item
+        </button>
+      </form>
+    </div>
+
+    <script>
+      document.getElementById("productForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert("Item listed successfully!");
+        this.reset();
+      });
+      document.getElementById("imageInput").addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const uploadDiv = document.querySelector(".image-upload");
+          uploadDiv.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color)"></i>
+            <p style="color:var(--success-color)">Image uploaded: ${file.name}</p>
+            <small>Click to change image</small>`;
+        }
+      });
+      document.getElementById('name').innerHTML = '{{ name }}'
+    </script>
+  </div>
+</body>
+</html>
+

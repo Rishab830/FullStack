@@ -1,0 +1,23 @@
+.navbar {
+        display: flex;
+        background-color: #c00c4f;
+        color: white;
+        font-size: 24px;
+        top: 16px;
+        position: sticky;
+        height: 80px;
+      }
+
+      .navbar img {
+        height: 100%;
+        width: auto;
+      }
+      .navbar ul {
+        display: flex;
+        flex-direction: row;
+        list-style-type: none;
+      }
+      .navbar ul li {
+        padding-left: 32px;
+        padding-right: 32px;
+      }

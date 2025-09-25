@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cookie Test</title>
+</head>
+<body>
+  <button onclick="setCookie()">Set Cookie</button>
+  <button onclick="showCookie()">Show Cookie</button>
+
+  <script>
+    function setCookie() {
+      document.cookie = "testCookie=hello";
+      alert("Cookie set!");
+    }
+
+    function showCookie() {
+      console.log("Cookies: ", document.cookie);
+      alert("Check console (F12 → Console)");
+    }
+  </script>
+</body>
+</html>

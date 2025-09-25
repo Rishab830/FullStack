@@ -1,0 +1,14 @@
+table {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    border-collapse: collapse;
+    height: 90%;
+}
+td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    border-collapse: collapse;
+    min-width: 3.25cm;
+}

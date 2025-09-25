@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do List - Black & Orange</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="todo.css">
+</head>
+<body>
+    <!-- Hamburger menu container -->
+    <div class="hamburger-menu">
+        <button id="hamburgerBtn" aria-label="Menu">&#9776;</button>
+        <div id="menuDropdown" class="dropdown-content" aria-hidden="true">
+            <button id="logoutBtn">Logout</button>
+            <button id="deleteAccountBtn">Delete Your Account</button>
+        </div>
+    </div>
+
+    <div class="container">
+    <div class="title">My To-Do List</div>
+
+    <form class="todo-form" id="todoForm" autocomplete="off">
+      <input id="taskDesc" type="text" placeholder="Task Description">
+      <input id="taskDate" type="date">
+      <button class="btn-add" type="submit">Add</button>
+    </form>
+    <div class="error-msg" id="todoError"></div>
+
+    <div class="filters">
+      <button class="filter-btn active" id="filterAll">All</button>
+      <button class="filter-btn" id="filterActive">Active</button>
+      <button class="filter-btn" id="filterCompleted">Completed</button>
+    </div>
+    
+    <ul class="todo-list" id="todoList"></ul>
+    
+    <div class="actions-bottom">
+      <button class="btn-clear-completed" id="clearCompletedBtn">Clear Completed</button>
+      <button class="btn-delete-personal" id="deletePersonalDataBtn">
+      Delete Your Personal Data
+      </button>
+    </div>
+
+    </div>
+    <script src="todo.js">
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Black & Orange</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <div class="container">
+    <div class="title">Login</div>
+    <form id="loginForm" autocomplete="off">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" type="text" required placeholder="Enter username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" required placeholder="Enter password">
+        <div id="strength-bar"></div>
+      </div>
+      <div class="error-msg" id="loginError"></div>
+      <button class="btn" type="submit">Log In</button>
+    </form>
+    <a class="footer-link" href="signup.html">Don't have an account? Sign up</a>
+    <a class="footer-link" href="home.html">← Home</a>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>

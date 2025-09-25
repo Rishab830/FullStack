@@ -1,0 +1,35 @@
+html {
+    background-color: orange;
+}
+form {
+    background-color: black;
+    margin: auto;
+    color: white;
+    border-radius: 1cm;
+    font-size: 1cm;
+    max-width: 90%;
+    min-height: 100%;
+}
+td {
+    color: white;
+    font-size: 1cm;
+    padding-left: 1cm;
+    padding-top: 1cm;
+}
+input {
+    font-size: 1cm;
+    background-color: black;
+    color: white;
+    border-color: darkviolet;
+    border-radius: 1cm;
+    border-width: 1px;
+    border-style: solid;
+    padding-left: 1cm;
+}
+input[type="button"], input[type="submit"] {
+    margin-top: 1cm;
+    margin-left: 1cm;
+    min-width: 5cm;
+    background-color: darkviolet;
+    padding-left: 0cm;
+}

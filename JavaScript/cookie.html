@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Cookie Example</title>
+    </head>
+    <body>
+        
+        <h2>Cookie Demo</h2>
+        <button onclick="testCookies()">Test Cookies</button>
+
+        <script>
+            function testCookies() {
+                document.cookie = "user=priya; path=/";
+                document.cookie = "firstName=amrita; expires=Fri, 20 Aug 2025 12:22:00 UTC; path=/";
+                console.log("Current cookies:" + document.cookie);
+                console.log(navigator.cookieEnabled);
+            }
+        </script>
+    </body>
+</html>

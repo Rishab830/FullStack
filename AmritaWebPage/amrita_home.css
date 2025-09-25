@@ -1,0 +1,42 @@
+.nav{
+    background-color: c00c4f;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.nav > a{
+    margin-left: 50px;
+    color: white;
+    text-decoration: none;
+}
+
+#admission{
+    background-color: fac52d;
+    border-radius: 20px;
+    text-decoration: none;
+    color: black;
+    margin-left: 5 00px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: large;
+    margin-right: 30px;
+}
+
+h1{
+    text-align: center;
+}
+
+.background_image{
+    background-image: url("home_bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 40%;
+}
+
+body{
+    margin: 0px;
+}
+
+.logo{
+    float: right;
+}

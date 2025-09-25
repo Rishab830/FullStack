@@ -1,0 +1,295 @@
+.hamburger-menu {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    user-select: none;
+    z-index: 10;
+}
+
+#hamburgerBtn {
+    font-size: 1.9rem;
+    background: none;
+    border: none;
+    color: #ff8000;
+    cursor: pointer;
+    padding: 0.35rem 0.55rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+#hamburgerBtn:hover, #hamburgerBtn:focus {
+    background-color: #ff80001a;
+    outline: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #232323;
+    min-width: 140px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+    border-radius: 0.8rem;
+    top: 3rem;
+    left: 0;
+    padding: 0.3rem 0;
+    flex-direction: column;
+    z-index: 15;
+}
+
+.dropdown-content button {
+    background: none;
+    border: none;
+    color: #ffad42;
+    cursor: pointer;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ff800020;
+    transition: background-color 0.18s, color 0.18s;
+    font-weight: 600;
+    border-radius: 0;
+}
+
+.dropdown-content button:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content button:hover, .dropdown-content button:focus {
+    background-color: #ff80001f;
+    color: #ff8000;
+    outline: none;
+}
+
+body {
+    background: #181818;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    color: #ff8000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container {
+    background: #232323;
+    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 1.2rem;
+    box-shadow: 0 8px 40px #000c;
+    width: 510px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff8000;
+    margin-bottom: 1.3rem;
+}
+.todo-form {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.todo-form input[type="text"] {
+    flex: 2 2 120px;
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.7rem;
+    background: #1e1e1e;
+    border: none;
+    color: #ffbe8f;
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.14s;
+}
+.todo-form input[type="date"] {
+    flex: 1 1 100px;
+    min-width: 105px;
+    padding: 0.65rem 0.7rem;
+    border-radius: 0.7rem;
+    background: #262626;
+    border: none;
+    color: #ff8000;
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.14s;
+}
+.btn-add {
+    flex: 0 0 70px;
+    background: linear-gradient(90deg, #ff8000 80%, #ffad42 100%);
+    border: none;
+    border-radius: 1.1rem;
+    color: #232323;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.65rem 0.4rem;
+    cursor: pointer;
+    transition: background 0.17s, color 0.17s;
+    margin-left: 0.5rem;
+}
+.btn-add:hover {
+    background: linear-gradient(90deg, #ffbe8f 60%, #ff8000 100%);
+    color: #181818;
+}
+.error-msg {
+    color: #ff4433;
+    font-size: 1rem;
+    min-height: 1.2rem;
+    margin-bottom: 0.2rem;
+    text-align: center;
+}
+.filters {
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 1.1rem;
+    justify-content: center;
+    width: 100%;
+}
+.filter-btn {
+    background: #181818;
+    border: none;
+    color: #ffad42;
+    padding: 0.33rem 1.1rem;
+    border-radius: 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.17s, color 0.17s;
+}
+.filter-btn.active {
+    background: #ff8000;
+    color: #181818;
+    font-weight: bold;
+}
+.todo-list {
+    width: 100%;
+    min-height: 100px;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.6rem;
+}
+.task-item {
+    padding: 0.85rem 0.9rem 0.75rem 0.95rem;
+    background: #181818;
+    border-radius: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.77rem;
+    transition: background 0.12s;
+    position: relative;
+    font-size: 1.07rem;
+    box-shadow: 0 2px 8px #0005;
+}
+.task-left {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+.task-desc {
+    color: #ffbe8f;
+    text-decoration: none;
+}
+.task-date {
+    font-size: 0.94em;
+    color: #ff8000;
+    margin-top: 1px;
+}
+.task-item.completed .task-desc {
+    color: #898989;
+    text-decoration: line-through;
+}
+.task-item.completed {
+    background: #22281e;
+    opacity: 0.68;
+}
+.btn-delete {
+    border: none;
+    background: #ff4433;
+    color: #fff;
+    border-radius: 50%;
+    width: 2.1rem;
+    height: 2.1rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    line-height: 2.1rem;
+    transition: background 0.18s;
+    margin-left: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-delete:hover {
+    background: #d10000;
+}
+.actions-bottom {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.btn-clear-completed {
+    background: #ff8000;
+    border: none;
+    color: #fff;
+    border-radius: 1.2rem;
+    padding: 0.57rem 1.4rem;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.14s;
+}
+.btn-delete-personal{
+    background:#bd1717;
+    color:white;
+    border:none;
+    padding:0.57rem 1.4rem;
+    border-radius:1.2rem;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:bold;
+    transition: background 0.14s;
+}
+.btn-clear-completed:hover {
+    background: linear-gradient(90deg, #ffad42, #ff7300);
+    color: #fff;
+}
+.home-link {
+    text-decoration: none;
+    color: #ffad42;
+    font-weight: 500;
+    font-size: 1rem;
+    align-self: flex-end;
+    margin-bottom: 1.2rem;
+    margin-top: -0.7rem;
+    transition: color 0.2s;
+}
+.home-link:hover {
+    color: #fff;
+}
+@media (max-width: 480px) {
+    .container {
+    width: 99vw;
+    padding: 1.0rem 0.4rem;
+    }
+    .title {
+    font-size: 1.26em;
+    }
+    .todo-form {
+    flex-direction: column;
+    gap: 0.4rem;
+    }
+    .actions-bottom {
+    flex-direction: column;
+    gap: 0.85rem;
+    }
+    .filters {
+    flex-direction: column;
+    gap: 0.5rem;
+    }
+}
