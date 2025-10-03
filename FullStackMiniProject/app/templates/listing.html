@@ -1,175 +1,158 @@
-<!-- seller.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Seller Dashboard - BidHub</title>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
-  <link rel="stylesheet" href="../static/styles.css"/>
-</head>
-<body>
-  <nav>
-    <a href="/" class="logo">
-      <i class="fas fa-gavel"></i> BidHub
-    </a>
-    <div class="nav-links">
-      <a href="{{ url_for('buyer', id=id) }}">
-        <i class="fas fa-shopping-cart"></i> Buyer
-      </a>
-      <a href="{{ url_for('seller', id=id) }}" class="active">
-        <i class="fas fa-plus-circle"></i> Seller
-      </a>
-    </div>
-    <div class="user-info">
-      <span>Welcome, <span id="name"></span>!</span>
-      <a href="/" class="logout-btn">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </a>
-    </div>
-  </nav>
-
-  <div class="main-content">
-    <div class="seller-tabs">
-      <a href="{{ url_for('seller', id=id)}}" class="tab-btn active" style="text-decoration: none;">
-        <button class="tab-btn active">
-          <i class="fas fa-plus-circle"></i>Create New Listing
-        </button>
-      </a>
-      <a href="{{ url_for('listing', id=id)}}" class="tab-btn" style="text-decoration: none;">
-        <button class="tab-btn">
-          <i class="fas fa-edit"></i> Manage Listings
-        </button>
-      </a>
-      
-    </div>
-    <div class="page-header">
-      <h1><i class="fas fa-plus-circle"></i> List New Item for Auction</h1>
-      <p>
-        Create a listing for your item and start receiving bids from interested
-        buyers.
-      </p>
-    </div>
-
-    <div class="tips-section">
-      <h3><i class="fas fa-lightbulb"></i> Tips for Successful Listings</h3>
-      <ul class="tips-list">
-        <li><i class="fas fa-check"></i> Use clear, high-quality photos</li>
-        <li><i class="fas fa-check"></i> Write detailed descriptions</li>
-        <li><i class="fas fa-check"></i> Set a competitive starting price</li>
-        <li><i class="fas fa-check"></i> Choose an appropriate duration</li>
-        <li><i class="fas fa-check"></i> Be honest about flaws</li>
-      </ul>
-    </div>
-
-    <div class="seller-form">
-      <form id="productForm" action="{{ url_for('product', user_id=id )}}" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-          <label for="productTitle"><i class="fas fa-tag"></i> Product Title</label>
-          <input
-            type="text"
-            id="productTitle"
-            name="title"
-            placeholder="Enter a descriptive title"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
-          <textarea
-            id="productDescription"
-            name="description"
-            placeholder="Provide detailed information"
-            required
-          ></textarea>
-        </div>
-        <div class="form-group">
-          <label><i class="fas fa-image"></i> Product Image</label>
-          <div class="image-upload" onclick="document.getElementById('imageInput').click()">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Click to upload product image</p>
-            <small>JPG, PNG, GIF (Max 5MB)</small>
-          </div>
-          <input type="file" id="imageInput" name="image" accept="image/*" class="hidden"/>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="startingPrice"><i class="fas fa-dollar-sign"></i> Starting Price</label>
-            <input
-              type="number"
-              id="startingPrice"
-              name="startingPrice"
-              placeholder="0.00"
-              min="0.01"
-              step="0.01"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="auctionDuration"><i class="fas fa-clock"></i> Auction Duration</label>
-            <select id="auctionDuration" name="duration" required>
-              <option value="">Select duration</option>
-              <option value="1">1 Day</option>
-              <option value="3">3 Days</option>
-              <option value="5">5 Days</option>
-              <option value="7" selected>7 Days</option>
-              <option value="10">10 Days</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="category"><i class="fas fa-folder"></i> Category</label>
-            <select id="category" name="category" required>
-              <option value="">Select category</option>
-              <option value="electronics">Electronics</option>
-              <option value="fashion">Fashion</option>
-              <option value="home">Home & Garden</option>
-              <option value="sports">Sports</option>
-              <option value="art">Art & Collectibles</option>
-              <option value="books">Books & Media</option>
-              <option value="jewelry">Jewelry & Watches</option>
-              <option value="vehicles">Vehicles</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="condition"><i class="fas fa-star"></i> Condition</label>
-            <select id="condition" name="condition" required>
-              <option value="">Select condition</option>
-              <option value="new">New</option>
-              <option value="like-new">Like New</option>
-              <option value="excellent">Excellent</option>
-              <option value="good">Good</option>
-              <option value="fair">Fair</option>
-              <option value="poor">Poor</option>
-            </select>
-          </div>
-        </div>
-        <button type="submit" class="submit-btn">
-          <i class="fas fa-gavel"></i> List Item
-        </button>
-      </form>
-    </div>
-
-    <script>
-      document.getElementById("imageInput").addEventListener("change", function (e) {
-        const file = e.target.files[0];
-        if (file) {
-          const uploadDiv = document.querySelector(".image-upload");
-          uploadDiv.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color)"></i>
-            <p style="color:var(--success-color)">Image uploaded: ${file.name}</p>
-            <small>Click to change image</small>`;
-        }
-      });
-      document.getElementById('name').innerHTML = '{{ name }}'
-    </script>
-  </div>
-
+  <meta charset="UTF-8">
+  <title>Seller Listings - BidHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <style>
+    /* Enhanced Seller Listings Overrides for better clarity */
+    .main-content {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .page-header h1 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      font-size: 1.05em;
+      color: var(--text-light);
+      margin-bottom: 30px;
+    }
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+    }
+    .listing-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .listing-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .listing-card.not-editable {
+      border-left: 4px solid var(--warning-color);
+    }
+    .listing-card.editable {
+      border-left: 4px solid var(--success-color);
+    }
+    .listing-image {
+      height: 120px;
+      background: var(--bg-color);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      font-size: 2.5em;
+    }
+    .listing-info h3 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+    .listing-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.85em;
+      color: var(--text-light);
+      background: var(--bg-color);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .listing-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .current-bid {
+      font-weight: 700;
+      color: var(--success-color);
+      font-size: 1.05em;
+    }
+    .time-left {
+      color: var(--text-light);
+      font-size: 0.9em;
+    }
+    .time-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    .editable-status {
+      background: rgba(17, 203, 174, 0.1);
+      color: var(--success-color);
+    }
+    .locked-status {
+      background: rgba(255, 107, 107, 0.1);
+      color: var(--warning-color);
+    }
+    .listing-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .edit-btn, .view-btn {
+      flex: 1;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+    }
+    .edit-btn {
+      background: var(--primary-color);
+      color: white;
+    }
+    .edit-btn:hover:not(.disabled) {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+    .edit-btn.disabled {
+      background: var(--text-light);
+      color: white;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .view-btn {
+      background: var(--accent-color);
+      color: white;
+    }
+    .view-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .main-content { padding: 0 15px; }
+      .listings-grid { grid-template-columns: 1fr; }
+    }
+
     .seller-tabs {
       display: flex;
       gap: 4px;
@@ -836,7 +819,77 @@
       }
     }
   </style>
-
+</head>
+<body>
+    <nav>
+    <a href="/" class="logo">
+        <i class="fas fa-gavel"></i> BidHub
+    </a>
+    <div class="nav-links">
+        <a href="{{ url_for('buyer', id=id) }}">
+            <i class="fas fa-shopping-cart"></i> Buyer
+        </a>
+        <a href="{{ url_for('seller', id=id) }}" class="active">
+            <i class="fas fa-plus-circle"></i> Seller
+        </a>
+    </div>
+    <div class="user-info">
+        <span>Welcome, {{ name }}!</span>
+        <a href="/" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="seller-tabs">
+            <a href="{{ url_for('seller', id=id)}}" class="tab-btn" style="text-decoration: none;">
+                <button class="tab-btn">
+                    <i class="fas fa-plus-circle"></i>Create New Listing
+                </button>
+            </a>
+            <a href="{{ url_for('listing', id=id)}}" class="tab-btn active" style="text-decoration: none;">
+                <button class="tab-btn active">
+                    <i class="fas fa-edit"></i> Manage Listings
+                </button>
+            </a>
+        </div>
+        <div class="listings-grid">
+            {% for listing in listings %}
+            <div class="listing-card {% if listing.is_editable %}editable{% else %}not-editable{% endif %}">
+                <img class="listing-image" src="data:image/png;base64,{{ listing.image_base64 }}">
+                <div class="listing-info">
+                    <h3>{{ listing.title }}</h3>
+                <div class="listing-details">
+                    <span class="detail-item"><i class="fas fa-info-circle"></i>{{ listing.description }}</span>
+                    <span class="detail-item"><i class="fas fa-folder"></i> {{ listing.category }}</span>
+                    <span class="detail-item"><i class="fas fa-star"></i> {{ listing.condition }}</span>
+                </div>
+                </div>
+                <div class="listing-meta">
+                    <span class="current-bid">Current Bid ₹{{ listing.price }}</span>
+                    <span class="time-left">{{ listing.duration }} days left</span>
+                </div>
+                <div class="time-status {% if listing.is_editable %}editable-status{% else %}locked-status{% endif %}">
+                {% if listing.is_editable %}
+                    <i class="fas fa-edit"></i> Editable {{ listing.time_passed_percent }}% of time passed
+                {% else %}
+                    <i class="fas fa-lock"></i> Locked {{ listing.time_passed_percent }}% of time passed
+                {% endif %}
+                </div>
+                <div class="listing-actions">
+                    <button class="edit-btn {% if not listing.is_editable %}disabled{% endif %}" {% if listing.is_editable %}onclick="editListing('{{ listing.id }}')" {% else %}disabled title="Cannot edit - more than 1/3 of auction time has passed"{% endif %}>
+                    {% if listing.is_editable %}
+                        <i class="fas fa-edit"></i> Edit
+                    {% else %}
+                        <i class="fas fa-lock"></i> Locked
+                    {% endif %}
+                    </button>
+                    <button class="view-btn" onclick="viewListing('{{ listing.id }}')">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
-</html>
-

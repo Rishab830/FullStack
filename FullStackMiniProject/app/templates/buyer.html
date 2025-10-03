@@ -16,10 +16,10 @@
       <i class="fas fa-gavel"></i> BidHub
     </a>
     <div class="nav-links">
-      <a href="{{ url_for('buyer', name=name) }}" class="active">
+      <a href="{{ url_for('buyer', id=id) }}" class="active">
         <i class="fas fa-shopping-cart"></i> Buyer
       </a>
-      <a href="{{ url_for('seller', name=name) }}">
+      <a href="{{ url_for('seller', id=id) }}">
         <i class="fas fa-plus-circle"></i> Seller
       </a>
     </div>
@@ -39,128 +39,27 @@
 
     <!-- === PRODUCT DISPLAY SECTION === -->
     <div class="products-grid">
-      <!-- Sample Product 1 -->
-      <div class="product-card">
-        <div class="product-image">
-          <i class="fas fa-laptop" style="font-size: 3em; color: var(--primary-color);"></i>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">MacBook Pro 2023 - Like New</h3>
-          <p class="product-description">
-            13-inch MacBook Pro with M2 chip, 8GB RAM, 256GB SSD. Excellent condition, barely used.
-          </p>
-          <div class="product-meta">
-            <span class="current-bid">$1,250.00</span>
-            <span class="time-left">2h 15m left</span>
+      {% for product in products %}
+        <div class="product-card">
+          <div class="product-image">
+            <img src="data:image/png;base64,{{ product.image_base64 }}">
           </div>
-          <button class="bid-button">
-            <i class="fas fa-gavel"></i> Place Bid
-          </button>
-        </div>
-      </div>
-
-      <!-- Sample Product 2 -->
-      <div class="product-card">
-        <div class="product-image">
-          <i class="fas fa-camera" style="font-size: 3em; color: var(--accent-color);"></i>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Canon EOS R5 Professional Camera</h3>
-          <p class="product-description">
-            Professional mirrorless camera with 45MP sensor. Includes original box and accessories.
-          </p>
-          <div class="product-meta">
-            <span class="current-bid">$2,800.00</span>
-            <span class="time-left">5h 42m left</span>
+          <div class="product-info">
+            <h3 class="product-title">{{ product.title }}</h3>
+            <p class="product-description">
+              {{ product.description }}
+            </p>
+            <div class="product-meta">
+              <span class="current-bid">{{ product.price }}</span>
+              <span class="time-left">{{ product.duration }}</span>
+            </div>
+            <button class="bid-button">
+              <i class="fas fa-gavel"></i> Place Bid
+            </button>
           </div>
-          <button class="bid-button">
-            <i class="fas fa-gavel"></i> Place Bid
-          </button>
         </div>
-      </div>
-
-      <!-- Sample Product 3 -->
-      <div class="product-card">
-        <div class="product-image">
-          <i class="fas fa-gem" style="font-size: 3em; color: var(--success-color);"></i>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Vintage Diamond Ring</h3>
-          <p class="product-description">
-            Beautiful vintage diamond engagement ring, 1.5 carat, certified authentic with appraisal.
-          </p>
-          <div class="product-meta">
-            <span class="current-bid">$3,500.00</span>
-            <span class="time-left">1d 3h left</span>
-          </div>
-          <button class="bid-button">
-            <i class="fas fa-gavel"></i> Place Bid
-          </button>
-        </div>
-      </div>
-
-      <!-- Sample Product 4 -->
-      <div class="product-card">
-        <div class="product-image">
-          <i class="fas fa-gamepad" style="font-size: 3em; color: var(--warning-color);"></i>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">PlayStation 5 Console Bundle</h3>
-          <p class="product-description">
-            Brand new PS5 console with extra controller and 3 popular games included.
-          </p>
-          <div class="product-meta">
-            <span class="current-bid">$650.00</span>
-            <span class="time-left">3d 12h left</span>
-          </div>
-          <button class="bid-button">
-            <i class="fas fa-gavel"></i> Place Bid
-          </button>
-        </div>
-      </div>
-
-      <!-- Sample Product 5 -->
-      <div class="product-card">
-        <div class="product-image">
-          <i class="fas fa-paint-brush" style="font-size: 3em; color: var(--accent-color);"></i>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Original Oil Painting - Landscape</h3>
-          <p class="product-description">
-            Beautiful original landscape painting by local artist. Framed and ready to hang.
-          </p>
-          <div class="product-meta">
-            <span class="current-bid">$425.00</span>
-            <span class="time-left">6d 8h left</span>
-          </div>
-          <button class="bid-button">
-            <i class="fas fa-gavel"></i> Place Bid
-          </button>
-        </div>
-      </div>
-
-      <!-- Sample Product 6 -->
-      <div class="product-card">
-        <div class="product-image">
-          <i class="fas fa-bicycle" style="font-size: 3em; color: var(--primary-color);"></i>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Mountain Bike - Trek 2022</h3>
-          <p class="product-description">
-            High-performance mountain bike, lightly used. Perfect for trails and outdoor adventures.
-          </p>
-          <div class="product-meta">
-            <span class="current-bid">$890.00</span>
-            <span class="time-left">1w 2d left</span>
-          </div>
-          <button class="bid-button">
-            <i class="fas fa-gavel"></i> Place Bid
-          </button>
-        </div>
-      </div>
+      {% endfor %}
     </div>
-    <!-- === END PRODUCT DISPLAY SECTION === -->
-
   </div>
 </body>
 </html>
