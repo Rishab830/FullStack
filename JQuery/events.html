@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#p1").hover(function(){
+                    $('#p1').css('color','blue')
+                },
+                function(){
+                    $('#p1').css('color','red')
+                })
+                $('#p1').click(function(){
+                    alert("None one talked about clicking >(")
+                })
+                $('input').focus(function(){
+                    $(this).css('background-color', 'grey')
+                })
+                $('input').blur(function(){
+                    $(this).css('background-color', 'white')
+                })
+                $('#d1').click(function(){
+                    $(this).hide()
+                    $('#d2').show()
+                })
+                $('#d2').click(function(){
+                    $(this).hide()
+                    $('#d3').show()
+                })
+                $('#d3').click(function(){
+                    $(this).hide()
+                    $('#d4').show()
+                })
+                $('#d4').click(function(){
+                    $(this).hide()
+                    $('#d5').show()
+                })
+                $('#d5').click(function(){
+                    $(this).hide()
+                    $('#d6').show()
+                })
+                $('#d6').click(function(){
+                    $(this).hide()
+                    $('#d7').show()
+                })
+                $('#d7').click(function(){
+                    $(this).hide()
+                    $('body').css('background-image','url(gun.jpeg)')
+                })
+                
+            })
+        </script>
+    </head>
+    <body>
+        <h1 id="p1">Hover over me, I change colors</h1>
+        <label for="name">Enter your name: </label>
+        <input type="text" name="name" id="name"><br>
+        <label for="email">Enter your email: </label>
+        <input type="text" name="email" id="email">
+        <p id="d1">Don't touch me</p><br><br>
+        <p id="d2" hidden style="text-align: right;">I said, Do not touch me</p><br><br><br>
+        <p id="d3" hidden style="text-align: center;">Resist.</p><br><br>
+        <p id="d4" hidden style="text-align: right;">Stop.</p><br><br><br><br><br>
+        <h3 id="d5" hidden>Stop.</h3><br>
+        <h2 id="d6" hidden style="text-align: right;">Stop.</h2><br>
+        <p id="d7" hidden>I am sorry for what is about to happen next</p>
+    </body>
+</html>

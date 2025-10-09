@@ -1,21 +1,18 @@
 from base64 import b64encode
 from bson import Binary
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from pymongo import MongoClient
-from PIL import Image
+from flask_session import Session
 import io
 
 app = Flask(__name__)
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['BidHub']
 user_collection = db['Users']
 product_collection = db['Products']
-
-@app.context_processor
-def add_imports():
-    # Note: we only define the top-level module names!
-    return dict(io=io)
 
 @app.route('/')
 def home():
@@ -36,7 +33,8 @@ def auth():
     user = user_collection.find_one({"username": username, "password": password})
     name = user['name']
     if user:
-        return redirect(url_for('buyer', id=user['id'], name=name))
+        session['user'] = user['id']
+        return redirect(url_for('buyer', name=name))
     else:
         return render_template('login.html', login_error='incorrect credentials')
     
@@ -50,17 +48,18 @@ def register():
     name = request.form.get('name')
     password = request.form.get('password')
     user_collection.insert_one({'id': id, 'name': name, 'password': password, 'email': email})
-    return redirect(url_for('buyer', id=user['id'], name=name))
+    session['user'] = user['id']
+    return redirect(url_for('buyer', name=name))
 
 @app.route('/buyer', methods=['GET', 'POST'])
 def buyer():
-    id = request.args['id']
+    id = session['user']
     name = user_collection.find_one({'id': int(id)})['name']
     products = list(db.Products.find())
     for product in products:
-        if product.get('image'):
+        if product.get('image'): 
             product['image_base64'] = b64encode(product['image']).decode('utf-8')
-    return render_template('buyer.html', name=name, products=products, id=id)
+    return render_template('buyer.html', name=name, products=products)
 
 @app.route('/seller', methods=['GET','POST'])
 def seller():
@@ -112,6 +111,12 @@ def product():
                 'image': Binary(image_data)
             })
         return redirect(url_for('buyer', id=user_id, name=name))
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    user_id = int(request.args['id'])
+    user = user_collection.find_one({'id': user_id})
+    return render_template('profile.html', user=user, edit=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
