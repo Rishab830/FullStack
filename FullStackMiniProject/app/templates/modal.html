@@ -104,9 +104,9 @@
               <span class="current-bid">${{ product.price }}</span>
               <span class="time-left">{{ time_left }}</span>
             </div>
-            <a href="{{ url_for('modal', product_id=product.product_id) }}" class="bid-button" style="text-decoration: none;">
+            <button class="bid-button" onclick="openBidModal('{{ product.product_id }}', '{{ product.title }}', '{{ product.price }}')">
               <i class="fas fa-gavel"></i> Place Bid
-            </a>
+            </button>
           </div>
         </div>
       {% endfor %}
@@ -234,171 +234,116 @@
 
   </div>
 
-  <script>
-    let currentProductId = null;
-    let currentHighestBid = 0;
+  <!-- Bid Modal -->
+  <div id="bidModal" class="modal">
+    <form action="{{ url_for('bid', product_id=selected_product.product_id) }}" method="POST" class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-gavel"></i> Place Your Bid</h2>
+        <a href="{{ url_for('buyer') }}" class="close-modal" style="text-decoration: none;">
+          <i class="fas fa-times"></i>
+        </a>
+      </div>
+      <div class="modal-body">
+        <div class="bid-product-info">
+          <h3 id="bidProductName">Product Name: {{ selected_product.title }}</h3>
+          <div class="current-high-bid">
+            <span>Current Highest Bid:</span>
+            <strong id="currentBidAmount">${{ selected_product.price}}</strong>
+          </div>
+        </div>
 
-    // Mock bid data for demonstration
-    const mockBidData = {
-      'PRD001': [
-        { bidder: 'You', amount: 1200.00, time: '2 minutes ago', isCurrentUser: true },
-        { bidder: 'Bidder123', amount: 1250.00, time: '5 minutes ago', isCurrentUser: false },
-        { bidder: 'TechLover', amount: 1150.00, time: '15 minutes ago', isCurrentUser: false },
-        { bidder: 'AppleFan', amount: 1100.00, time: '1 hour ago', isCurrentUser: false }
-      ],
-      'PRD002': [
-        { bidder: 'PhotoPro', amount: 2800.00, time: '10 minutes ago', isCurrentUser: false },
-        { bidder: 'You', amount: 2750.00, time: '25 minutes ago', isCurrentUser: true },
-        { bidder: 'CameraGuy', amount: 2700.00, time: '45 minutes ago', isCurrentUser: false }
-      ],
-      'PRD003': [
-        { bidder: 'JewelCollector', amount: 3500.00, time: '2 hours ago', isCurrentUser: false },
-        { bidder: 'DiamondLover', amount: 3400.00, time: '3 hours ago', isCurrentUser: false }
-      ],
-      'PRD004': [
-        { bidder: 'GamerPro', amount: 650.00, time: '1 day ago', isCurrentUser: false },
-        { bidder: 'You', amount: 625.00, time: '1 day ago', isCurrentUser: true }
-      ],
-      'PRD005': [
-        { bidder: 'ArtLover', amount: 425.00, time: '2 days ago', isCurrentUser: false }
-      ],
-      'PRD006': [
-        { bidder: 'AdventureSeeker', amount: 890.00, time: '3 days ago', isCurrentUser: false },
-        { bidder: 'You', amount: 875.00, time: '4 days ago', isCurrentUser: true }
-      ]
-    };
-
-    function openBidModal(productId, productName, currentBid) {
-      currentProductId = productId;
-      currentHighestBid = currentBid;
-      
-      // Update modal content
-      document.getElementById('bidProductName').textContent = productName;
-      document.getElementById('currentBidAmount').textContent = currentBid;
-      document.getElementById('minBid').textContent = (currentBid + 5);
-      document.getElementById('bidAmount').value = (currentBid + 5);
-      document.getElementById('bidAmount').min = (currentBid + 5);
-      
-      // Update bid history
-      updateBidHistory(productId);
-      
-      // Update summary
-      updateBidSummary();
-      
-      // Reset terms checkbox
-      document.getElementById('agreeTerms').checked = false;
-      
-      // Show modal
-      document.getElementById('bidModal').classList.remove('hidden');
-    }
-
-    function closeBidModal() {
-      document.getElementById('bidModal').classList.add('hidden');
-      currentProductId = null;
-    }
-
-    function updateBidHistory(productId) {
-      const bidsList = document.getElementById('bidsList');
-      const bids = mockBidData[productId] || [];
-      
-      if (bids.length === 0) {
-        bidsList.innerHTML = '<div class="no-bids">No bids yet. Be the first to bid!</div>';
-        return;
-      }
-      
-      bidsList.innerHTML = bids.map(bid => `
-        <div class="bid-item ${bid.isCurrentUser ? 'your-bid' : ''}">
-          <div class="bidder-info">
-            <div class="bidder-avatar">
-              <i class="fas fa-user"></i>
+        <div class="bids-history">
+          <h4><i class="fas fa-history"></i> Bid History</h4>
+          <div class="bids-list" id="bidsList">
+            {% for history in histories %}
+            <div class="bid-item">
+              <div class="bidder-info">
+                <div class="bidder-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div>
+                  <div class="bidder-name">{{ history.bidder }}</div>
+                  <div class="bid-time">{{ history.time }}</div>
+                </div>
+              </div>
+              <div class="bid-amount">${{ history.amount }}</div>
             </div>
-            <div>
-              <div class="bidder-name">${bid.bidder}</div>
-              <div class="bid-time">${bid.time}</div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="bid-form">
+          <div class="form-group">
+            <label for="bidAmount">Your Bid Amount ($)</label>
+            <input 
+              type="number" 
+              id="bidAmount" 
+              name="bidAmount"
+              step="5" 
+              min="{{ int(selected_product.price) + 5 }}" 
+              value="{{ int(selected_product.price) + 5 }}"
+              onchange="summary()"
+            >
+            <div class="bid-help">
+              <small>Minimum bid: $<span id="minBid">{{ int(selected_product.price) + 5 }}</span></small>
             </div>
           </div>
-          <div class="bid-amount">$${bid.amount.toFixed(2)}</div>
+          
+          <div class="bid-summary">
+            <div class="summary-item">
+              <span>Your Bid:</span>
+              <span id="summaryBid">${{ int(selected_product.price) + 5 }}</span>
+            </div>
+            <div class="summary-item">
+              <span>Service Fee (5%):</span>
+              <span id="summaryFee">${{ (int(selected_product.price) + 5) * 5 / 100}}</span>
+            </div>
+            <div class="summary-item total">
+              <span>Total:</span>
+              <span id="summaryTotal">${{ (int(selected_product.price) + 5) * 105 / 100}}</span>
+            </div>
+          </div>
+
+          <div class="bid-terms">
+            <label class="checkbox-option">
+              <input type="checkbox" id="agreeTerms">
+              <span>I agree to the <a href="#">Bidding Terms</a> and understand this is a binding offer</span>
+            </label>
+          </div>
         </div>
-      `).join('');
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="exit()">Cancel</button>
+        <button type="submit" class="btn-confirm" id="confirmBidBtn">Place Bid</button>
+      </div>
+    </form>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+
+    function summary(){
+      var price = document.getElementById('bidAmount').value
+      document.getElementById('summaryBid').innerHTML = '$' + price
+      document.getElementById('summaryFee').innerHTML = '$' + price * 5 / 100
+      document.getElementById('summaryTotal').innerHTML = '$' + price * 105 / 100
     }
 
-    function updateBidSummary() {
-      const bidAmount = parseFloat(document.getElementById('bidAmount').value) || 0;
-      const serviceFee = bidAmount * 0.05;
-      const total = bidAmount + serviceFee;
-      
-      document.getElementById('summaryBid').textContent = `$${bidAmount.toFixed(2)}`;
-      document.getElementById('summaryFee').textContent = `$${serviceFee.toFixed(2)}`;
-      document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
-      
-      // Enable/disable confirm button based on bid amount
-      const minBid = currentHighestBid + 5;
-      const confirmBtn = document.getElementById('confirmBidBtn');
-      const agreedToTerms = document.getElementById('agreeTerms').checked;
-      
-      confirmBtn.disabled = bidAmount < minBid || !agreedToTerms;
+    function exit(){
+      window.location.href = "{{ url_for('buyer') }}"
     }
 
-    function placeBid() {
-      const bidAmount = parseFloat(document.getElementById('bidAmount').value);
-      const minBid = currentHighestBid + 5;
-      
-      if (bidAmount < minBid) {
-        alert(`Your bid must be at least $${minBid.toFixed(2)} to outbid the current highest bid.`);
-        return;
-      }
-      
-      if (!document.getElementById('agreeTerms').checked) {
-        alert('Please agree to the bidding terms before placing your bid.');
-        return;
-      }
-      
-      // In a real application, this would send the bid to the server
-      // For demo purposes, we'll just show a success message
-      alert(`Success! Your bid of $${bidAmount.toFixed(2)} has been placed for "${document.getElementById('bidProductName').textContent}".`);
-      
-      // Update the current bid display on the product card
-      const productCard = document.querySelector(`.bid-button[onclick*="${currentProductId}"]`).closest('.product-card');
-      const currentBidSpan = productCard.querySelector('.current-bid');
-      currentBidSpan.textContent = `$${bidAmount.toFixed(2)}`;
-      
-      // Update the highest bid in the modal
-      currentHighestBid = bidAmount;
-      document.getElementById('currentBidAmount').textContent = `$${bidAmount.toFixed(2)}`;
-      document.getElementById('minBid').textContent = (bidAmount + 5).toFixed(2);
-      
-      // Add the new bid to the history
-      if (!mockBidData[currentProductId]) {
-        mockBidData[currentProductId] = [];
-      }
-      
-      mockBidData[currentProductId].unshift({
-        bidder: 'You',
-        amount: bidAmount,
-        time: 'Just now',
-        isCurrentUser: true
-      });
-      
-      updateBidHistory(currentProductId);
-      closeBidModal();
-
-    }
-    
-    function toggleNotifications() {
-      const panel = document.getElementById('notificationPanel');
-      panel.classList.toggle('hidden');
-    }
-    
     // Event listeners for real-time updates
     document.addEventListener('DOMContentLoaded', function() {
       
       // Close modal when clicking outside
       document.getElementById('bidModal').addEventListener('click', function(e) {
         if (e.target === this) {
-          closeBidModal();
+          window.location.href = "{{ url_for('buyer') }}"
         }
       });
     });
+
+
   </script>
 </body>
 </html>
