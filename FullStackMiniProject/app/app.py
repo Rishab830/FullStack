@@ -43,6 +43,14 @@ def auth():
     name = user['name']
     if user:
         session['user_id'] = user['id']
+        products = list(product_collection.find({'user_id':user['id']}))
+        for product in products:
+            if product['end_time'] < datetime.now():
+                history = product['history']
+                history.sort(key=lambda x: x['amount'], reverse=True)
+                user_collection.update_one({'id': history[0]['user_id']}, {'$push': { 'owned_products': product}})
+                product_collection.delete_one({'product_id': product['product_id']})
+                
         return redirect(url_for('buyer', name=name))
     else:
         return render_template('login.html', login_error='incorrect credentials')
@@ -56,15 +64,16 @@ def register():
     id = user_collection.count_documents({}) + 1
     name = request.form.get('name')
     password = request.form.get('password')
-    user_collection.insert_one({'id': id, 'name': name, 'password': password, 'email': email})
-    session['user_id'] = user['id']
+    user_collection.insert_one({'id': id, 'name': name, 'password': password, 'email': email, 'owned_products': []})
+    session['user_id'] = id
     return redirect(url_for('buyer', name=name))
 
 @app.route('/buyer', methods=['GET', 'POST'])
 def buyer():
     id = session['user_id']
-    name = user_collection.find_one({'id': int(id)})['name']
-    products = list(db.Products.find())
+    user = user_collection.find_one({'id': int(id)})
+    name = user['name']
+    products = list(db.Products.find({'user_id': session['user_id']}))
     time_lefts = []
     for product in products:
         if product.get('image'): 
@@ -72,7 +81,7 @@ def buyer():
         time_left = product['end_time'] - datetime.now()
         time_lefts.append(f"{time_left.days} days {time_left.seconds//3600} hours left")
 
-    return render_template('buyer.html', name=name, products=products, time_lefts=time_lefts)
+    return render_template('buyer.html', name=name, products=products, time_lefts=time_lefts, user=user)
 
 @app.route('/seller', methods=['GET','POST'])
 def seller():
@@ -127,6 +136,7 @@ def product():
                 'condition': condition,
                 'image': Binary(image_data),
                 'history': [{
+                    'user_id': session['user_id'],
                     'bidder': name,
                     'time': datetime.now().replace(microsecond=0),
                     'amount': price
@@ -165,7 +175,7 @@ def bid():
     product_collection.update_one({'product_id':int(product_id)}, {'$set': {'price': int(price)}})
     curr_time = datetime.now().replace(microsecond=0)
     name = user_collection.find_one({'id': int(session['user_id'])})['name']
-    result = product_collection.update_one({'product_id': int(product_id)}, {'$push': { 'history': {'bidder': name, 'time': curr_time, 'amount': int(price)}}})
+    result = product_collection.update_one({'product_id': int(product_id)}, {'$push': { 'history': {'user_id': session['user_id'], 'bidder': name, 'time': curr_time, 'amount': int(price)}}})
     print(result)
     return redirect(url_for('buyer'))
 

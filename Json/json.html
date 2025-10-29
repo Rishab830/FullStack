@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>Javascript Obejects to JSON</title>
+    </head>
+    <body>
+        <p id="value"></p>
+    </body>
+    <script>
+        var employee = `{"fname":"Ayush","mname":"John","lname":"Daniel","age":30,"city":"Bangalore"}`
+        var myJSON = JSON.parse(employee)
+
+        document.getElementById("value").innerHTML = myJSON.fname
+    </script>
+</html>
