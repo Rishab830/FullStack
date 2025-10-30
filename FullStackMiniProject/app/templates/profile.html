@@ -14,6 +14,13 @@
       const panel = document.getElementById('notificationPanel');
       panel.classList.toggle('hidden');
     }
+
+    function editOn(){
+      window.location.href = "{{ url_for('profile', edit=True) }}"
+    }
+    function editOff(){
+      window.location.href="{{ url_for('profile', edit=False) }}"
+    }
   </script>
 </head>
 <body>
@@ -28,66 +35,17 @@
       <a href="{{ url_for('seller') }}">
         <i class="fas fa-plus-circle"></i> Seller
       </a>
-      <a href="{{ url_for('profile') }}" class="active">
+      <a href="{{ url_for('profile', edit=False) }}" class="active">
         <i class="fas fa-user"></i> Profile
       </a>
     </div>
     <div class="user-info">
-      <div class="notification-icon" onclick="toggleNotifications()">
-        <i class="fas fa-bell"></i>
-        <span class="notification-badge">3</span>
-      </div>
       <span id="navUsername">Welcome, {{ user['name'] }}!</span>
       <a href="/" class="logout-btn" >
         <i class="fas fa-sign-out-alt"></i> Logout
       </a>
     </div>
   </nav>
-
-  <!-- Notification Panel -->
-  <div id="notificationPanel" class="notification-panel hidden">
-    <div class="notification-header">
-      <h3><i class="fas fa-bell"></i> Notifications</h3>
-      <button onclick="toggleNotifications()" class="close-btn">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="notification-list">
-      <div class="notification-item unread">
-        <div class="notification-icon won">
-          <i class="fas fa-trophy"></i>
-        </div>
-        <div class="notification-content">
-          <h4>Congratulations! You won an auction</h4>
-          <p>MacBook Pro 2023 - Like New for $1,350.00</p>
-          <span class="notification-time">2 hours ago</span>
-        </div>
-      </div>
-      <div class="notification-item unread">
-        <div class="notification-icon outbid">
-          <i class="fas fa-arrow-up"></i>
-        </div>
-        <div class="notification-content">
-          <h4>You've been outbid</h4>
-          <p>Canon EOS R5 Professional Camera - Current bid: $2,950.00</p>
-          <span class="notification-time">4 hours ago</span>
-        </div>
-      </div>
-      <div class="notification-item">
-        <div class="notification-icon outbid">
-          <i class="fas fa-arrow-up"></i>
-        </div>
-        <div class="notification-content">
-          <h4>You've been outbid</h4>
-          <p>PlayStation 5 Console Bundle - Current bid: $725.00</p>
-          <span class="notification-time">1 day ago</span>
-        </div>
-      </div>
-    </div>
-    <div class="notification-footer">
-      <button onclick="markAllAsRead()" class="mark-read-btn">Mark all as read</button>
-    </div>
-  </div>
 
   <div class="main-content">
     <div class="page-header">
@@ -100,11 +58,11 @@
       <div class="profile-section">
         <div class="section-header">
           <h2><i class="fas fa-user-circle"></i> User Details</h2>
-          <button class="edit-btn" onclick="toggleEdit()">
+          <button class="edit-btn" onclick="editOn()">
             <i class="fas fa-edit"></i> Edit Profile
           </button>
         </div>
-        {% if not edit %}
+        {% if edit == 'False' %}
         <div class="user-details" id="userDetails">
           <div class="detail-row">
             <label>Username:</label>
@@ -126,102 +84,33 @@
         {% endif %}
         
         <!-- Edit Form (Hidden by default) -->
-        {% if edit %}
-        <div class="edit-form hidden" id="editForm">
+        {% if edit == 'True' %}
+        <form class="edit-form" id="editForm" method="post" action="{{ url_for('updateProfile') }}">
           <div class="form-group">
             <label>Username:</label>
-            <input type="text" id="editUsername" placeholder="Enter username">
+            <input type="text" id="editUsername" name="username" value="{{ user['name'] }}">
           </div>
           <div class="form-group">
             <label>Email:</label>
-            <input type="email" id="editEmail" placeholder="Enter email">
+            <input type="email" id="editEmail" name="email" value="{{ user['email'] }}">
           </div>
           <div class="form-group">
             <label>Phone:</label>
-            <input type="tel" id="editPhone" placeholder="Enter phone number">
+            <input type="tel" id="editPhone" name="phone" value="{{ user['phone_no'] }}">
           </div>
           <div class="form-group">
             <label>Address:</label>
-            <textarea id="editAddress" placeholder="Enter your address" rows="3"></textarea>
+            <input type="text" id="editAddress" name="address" value="{{ user['address'] }}"></input>
           </div>
           <div class="form-actions">
-            <button class="save-btn" onclick="saveProfile()">
-              <i class="fas fa-save"></i> Save Changes
-            </button>
-            <button class="cancel-btn" onclick="cancelEdit()">
+            <input type="submit" class="save-btn" value="Save Changes" style="width: 50%;">
+            </input>
+            <button class="cancel-btn" style="width: 50%;" onclick="editOff()" type="button">
               <i class="fas fa-times"></i> Cancel
             </button>
           </div>
-        </div>
+        </form>
         {% endif %}
-      </div>
-
-      <!-- Active Bids Section -->
-      <div class="profile-section">
-        <div class="section-header">
-          <h2><i class="fas fa-gavel"></i> Active Bids</h2>
-        </div>
-        <div class="bids-grid">
-          <div class="bid-item">
-            <div class="bid-image">
-              <i class="fas fa-camera" style="font-size: 2em; color: var(--accent-color);"></i>
-            </div>
-            <div class="bid-info">
-              <h4>Canon EOS R5 Professional Camera</h4>
-              <div class="bid-details">
-                <span class="your-bid">Your bid: $2,800.00</span>
-                <span class="current-bid">Current: $2,950.00</span>
-                <span class="time-left">4h 32m left</span>
-              </div>
-              <div class="bid-status outbid">
-                <i class="fas fa-arrow-up"></i> Outbid
-              </div>
-            </div>
-            <button class="rebid-btn" onclick="openIncreaseBidModal('BID001', 'Canon EOS R5 Professional Camera', 2800.00, 2950.00)">
-              <i class="fas fa-plus"></i> Increase Bid
-            </button>
-          </div>
-
-          <div class="bid-item">
-            <div class="bid-image">
-              <i class="fas fa-gamepad" style="font-size: 2em; color: var(--warning-color);"></i>
-            </div>
-            <div class="bid-info">
-              <h4>PlayStation 5 Console Bundle</h4>
-              <div class="bid-details">
-                <span class="your-bid">Your bid: $700.00</span>
-                <span class="current-bid">Current: $725.00</span>
-                <span class="time-left">2d 10h left</span>
-              </div>
-              <div class="bid-status outbid">
-                <i class="fas fa-arrow-up"></i> Outbid
-              </div>
-            </div>
-            <button class="rebid-btn" onclick="openIncreaseBidModal('BID002', 'PlayStation 5 Console Bundle', 700.00, 725.00)">
-              <i class="fas fa-plus"></i> Increase Bid
-            </button>
-          </div>
-
-          <div class="bid-item">
-            <div class="bid-image">
-              <i class="fas fa-bicycle" style="font-size: 2em; color: var(--primary-color);"></i>
-            </div>
-            <div class="bid-info">
-              <h4>Mountain Bike - Trek 2022</h4>
-              <div class="bid-details">
-                <span class="your-bid">Your bid: $920.00</span>
-                <span class="current-bid">Current: $920.00</span>
-                <span class="time-left">5d 18h left</span>
-              </div>
-              <div class="bid-status winning">
-                <i class="fas fa-trophy"></i> Winning
-              </div>
-            </div>
-            <button class="rebid-btn" onclick="openIncreaseBidModal('BID003', 'Mountain Bike - Trek 2022', 920.00, 920.00)">
-              <i class="fas fa-plus"></i> Increase Bid
-            </button>
-          </div>
-        </div>
       </div>
 
       <!-- Won Items Section -->
@@ -230,15 +119,16 @@
           <h2><i class="fas fa-trophy"></i> Won Items</h2>
         </div>
         <div class="won-items-grid">
+          {% for item in user.owned_products %}
           <div class="won-item">
             <div class="won-image">
               <i class="fas fa-laptop" style="font-size: 2em; color: var(--primary-color);"></i>
             </div>
             <div class="won-info">
-              <h4>MacBook Pro 2023 - Like New</h4>
+              <h4>{{ item.title }} - {{ item.condition }}</h4>
               <div class="won-details">
-                <span class="winning-bid">Won for: $1,350.00</span>
-                <span class="won-date">Won on: Sep 25, 2025</span>
+                <span class="winning-bid">Won for: ₹{{ item.price }}</span>
+                <span class="won-date">Won on: {{ item.history[0].time }}</span>
               </div>
             </div>
             <div class="won-status">
@@ -247,24 +137,7 @@
               </span>
             </div>
           </div>
-
-          <div class="won-item">
-            <div class="won-image">
-              <i class="fas fa-headphones" style="font-size: 2em; color: var(--accent-color);"></i>
-            </div>
-            <div class="won-info">
-              <h4>Sony WH-1000XM5 Headphones</h4>
-              <div class="won-details">
-                <span class="winning-bid">Won for: $280.00</span>
-                <span class="won-date">Won on: Sep 20, 2025</span>
-              </div>
-            </div>
-            <div class="won-status">
-              <span class="status-badge pending">
-                <i class="fas fa-clock"></i> Pending Payment
-              </span>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
 
@@ -279,7 +152,7 @@
               <i class="fas fa-gavel"></i>
             </div>
             <div class="stat-info">
-              <h3 id="statBids">0</h3>
+              <h3 id="statBids">{{ user.num_of_bids }}</h3>
               <p>Total Bids Placed</p>
             </div>
           </div>
@@ -288,7 +161,7 @@
               <i class="fas fa-trophy"></i>
             </div>
             <div class="stat-info">
-              <h3 id="statWon">0</h3>
+              <h3 id="statWon">{{ len(user.owned_products) }}</h3>
               <p>Auctions Won</p>
             </div>
           </div>
@@ -297,17 +170,8 @@
               <i class="fas fa-dollar-sign"></i>
             </div>
             <div class="stat-info">
-              <h3 id="statSpent">$0</h3>
+              <h3 id="statSpent">₹{{ user.total_spent }}</h3>
               <p>Total Spent</p>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">
-              <i class="fas fa-percentage"></i>
-            </div>
-            <div class="stat-info">
-              <h3 id="statWinRate">0%</h3>
-              <p>Win Rate</p>
             </div>
           </div>
         </div>

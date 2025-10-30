@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - BidHub</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link rel="stylesheet" href="../static/style.css"/>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">
+      <i class="fas fa-gavel"></i> BidHub Admin
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('admin', dashboard=True) }}" {% if dashboard %} class="active" {% endif %}>
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+      </a>
+      <a href="{{ url_for('admin', products=True) }}" {% if products_view %} class="active" {% endif %}>
+        <i class="fas fa-box"></i> Products
+      </a>
+      <a href="{{ url_for('admin', users=True) }}" {% if users_view %} class="active" {% endif %}>
+        <i class="fas fa-users"></i> Users
+      </a>
+    </div>
+    <div class="user-info">
+      <span>Admin Portal</span>
+      <a href="/" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+    {% if dashboard %}
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="admin-section">
+      <div class="page-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+        <p>Overview of site statistics and key metrics</p>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon users">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="metric-info">
+            <h3>{{ metrics.total_users }}</h3>
+            <p>Total Users</p>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-icon products">
+            <i class="fas fa-box"></i>
+          </div>
+          <div class="metric-info">
+            <h3>{{ metrics.total_auctions }}</h3>
+            <p>Active Auctions</p>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-icon revenue">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="metric-info">
+            <h3>₹{{ metrics.total_revenue }}</h3>
+            <p>Total Revenue</p>
+          </div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-icon transactions">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <div class="metric-info">
+            <h3>{{ metrics.total_sales }}</h3>
+            <p>Completed Sales</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% if products_view %}
+    <!-- Products Management Section -->
+    <div id="products" class="admin-section">
+      <div class="page-header">
+        <h1><i class="fas fa-box"></i> Product Management</h1>
+        <p>Monitor and manage auction listings</p>
+      </div>
+
+      <div class="products-table">
+        <table id="productsTable">
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Current Bid</th>
+              <th>Expires</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+            <tr>
+              <td>{{ product.user_id }}</td>
+              <td>{{ product.title }} - {{ product.condition }}</td>
+              <td>{{ product.category }}</td>
+              <td>₹{{ product.price }}</td>
+              <td>{{ product.time_left.days}}d {{product.time_left.seconds//3600}}h</td>
+              <td><span class="status active">Active</span></td>
+              <td>
+                <button class="action-btn delete" onclick="window.location.href=`{{ url_for('delete_product', product_id=product.product_id) }}`">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+    {% if users_view %}
+    <!-- Users Management Section - COMPLETELY REMADE -->
+    <div id="users" class="admin-section">
+      <div class="page-header">
+        <h1><i class="fas fa-users"></i> User Management</h1>
+        <p>Monitor user accounts and activity</p>
+      </div>
+
+      <div class="users-table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>User Info</th>
+              <th>Activity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td>{{ user.id }}</td>
+              <td>
+                <div class="user-info-cell">
+                  <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <div class="user-details">
+                    <strong>{{ user.name }}</strong>
+                    <span>{{ user.email }}</span>
+                    <span>Joined: {{ user.joined_on }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-activity">
+                  <span>Bids: {{ user.num_of_bids }}</span>
+                  <span>Listings: {{ user.listings }}</span>
+                  <span>Spent: ₹{{ user.total_spent }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="user-actions">
+                  <button class="action-btn suspend" onclick="window.location.href=`{{ url_for('delete_user', user_id=user.id) }}`">
+                    <i class="fas fa-ban"></i> Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+</body>
+</html>

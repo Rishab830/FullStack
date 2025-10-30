@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Dashboard - BidHub</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link rel="stylesheet" href="../static/styles.css"/>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">
+      <i class="fas fa-gavel"></i> BidHub
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('buyer', id=id) }}">
+            <i class="fas fa-shopping-cart"></i> Buyer
+        </a>
+        <a href="{{ url_for('seller', id=id) }}" class="active">
+            <i class="fas fa-plus-circle"></i> Seller
+        </a>
+        <a href="{{ url_for('profile', edit=False) }}">
+            <i class="fas fa-user"></i> Profile
+      </a>
+    </div>
+    <div class="user-info">
+      <span>Welcome, User!</span>
+      <a href="/" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+        <div class="seller-tabs">
+            <a href="{{ url_for('seller', id=id)}}" class="tab-btn" style="text-decoration: none;">
+                <button class="tab-btn">
+                    <i class="fas fa-plus-circle"></i>Create New Listing
+                </button>
+            </a>
+            <a href="{{ url_for('listing', id=id)}}" class="tab-btn active" style="text-decoration: none;">
+                <button class="tab-btn active">
+                    <i class="fas fa-edit"></i> Manage Listings
+                </button>
+            </a>
+        </div>
+        <!-- View Listing Details Section -->
+          <div id="viewListingTab" class="tab-content">
+            <div class="page-header">
+              <div class="header-actions">
+                <button class="back-btn" onclick="window.location.href=`{{ url_for('listing') }}`">
+                  <i class="fas fa-arrow-left"></i> Back to Listings
+                </button>
+                <h1><i class="fas fa-chart-line"></i> Listing Analytics</h1>
+              </div>
+              <p>Detailed view of your listing performance and bid activity</p>
+            </div>
+      
+            <div class="listing-details-container">
+              <div class="listing-overview">
+                <div class="listing-header">
+                  <div class="listing-image-large">
+                    <img class="listing-image" src="data:image/png;base64,{{ product.image_base64 }}">
+                  </div>
+                  <div class="listing-info-large">
+                    <h2 id="viewListingTitle">{{ product.title }}</h2>
+                    <div class="listing-stats">
+                      <div class="stat">
+                        <span class="stat-value" id="viewCurrentBid">₹{{ product.price }}</span>
+                        <span class="stat-label">Current Bid</span>
+                      </div>
+                      <div class="stat">
+                        <span class="stat-value" id="viewBidCount">{{ len(product.history) }}</span>
+                        <span class="stat-label">Total Bids</span>
+                      </div>
+                      <div class="stat">
+                        <span class="stat-value" id="viewTimeLeft">{{ product.time_left.days }}d {{ product.time_left.seconds//3600 }}h</span>
+                        <span class="stat-label">Time Left</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      
+              <div class="details-grid">
+                <!-- Bid History Section -->
+                <div class="details-section">
+                  <h3><i class="fas fa-gavel"></i> Bid History</h3>
+                  <div class="bids-table">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Bidder</th>
+                          <th>Amount</th>
+                          <th>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody id="bidsTableBody">
+                        {% for history in product.history %}
+                        <tr>
+                            <td>{{ history.bidder }}</td>
+                            <td>₹{{ history.amount }}</td>
+                            <td>{{ history.time }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+      
+                <!-- Bidder Insights Section -->
+                <div class="details-section">
+                  <h3><i class="fas fa-users"></i> Bidder Insights</h3>
+                  <div class="insights-grid">
+                    <div class="insight-card">
+                      <div class="insight-icon">
+                        <i class="fas fa-trophy"></i>
+                      </div>
+                      <div >
+                        <h4>Highest Bidder</h4>
+                        <p id="highestBidder">{{ product.history[0].bidder }}</p>
+                      </div>
+                    </div>
+                </div>
+      
+                <!-- Performance Metrics -->
+                <div class="details-section">
+                  <h3><i class="fas fa-chart-bar"></i> Performance Metrics</h3>
+                  <div class="metrics-cards">
+                    <div class="metric-card">
+                      <div class="metric-value" id="avgBidAmount">₹{{ avg_bid }}</div>
+                      <div class="metric-label">Average Bid Amount</div>
+                      <div class="metric-description">Average of all bids placed</div>
+                    </div>
+                    <div class="metric-card">
+                      <div class="metric-value" id="bidFrequency">{{ bid_freq }}</div>
+                      <div class="metric-label">Bid Frequency</div>
+                      <div class="metric-description">Time between bids</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+
+  <script>
+    // Image upload handler
+    document.getElementById("imageInput").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const uploadDiv = document.querySelector(".image-upload");
+        uploadDiv.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color)"></i>
+          <p style="color:var(--success-color)">Image uploaded: ${file.name}</p>
+          <small>Click to change image</small>`;
+      }
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('editModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeEditModal();
+      }
+    });
+
+    function closeEditModal(){
+      window.location.href="{{ url_for('listing') }}"
+    }
+  </script>
+</body>
+</html>

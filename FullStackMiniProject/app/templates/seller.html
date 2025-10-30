@@ -23,15 +23,11 @@
       <a href="{{ url_for('seller') }}" class="active">
         <i class="fas fa-plus-circle"></i> Seller
       </a>
-      <a href="{{ url_for('profile')}}">
+      <a href="{{ url_for('profile', edit=False)}}">
         <i class="fas fa-user"></i> Profile
       </a>
     </div>
     <div class="user-info">
-      <div class="notification-icon" onclick="toggleNotifications()">
-        <i class="fas fa-bell"></i>
-        <span class="notification-badge">3</span>
-      </div>
       <span id="navUsername">Welcome, {{ name }}!</span>
       <a href="/" class="logout-btn" >
         <i class="fas fa-sign-out-alt"></i> Logout
@@ -45,41 +41,6 @@
       <button onclick="toggleNotifications()" class="close-btn">
         <i class="fas fa-times"></i>
       </button>
-    </div>
-    <div class="notification-list">
-      <div class="notification-item unread">
-        <div class="notification-icon won">
-          <i class="fas fa-trophy"></i>
-        </div>
-        <div class="notification-content">
-          <h4>Congratulations! You won an auction</h4>
-          <p>MacBook Pro 2023 - Like New for $1,350.00</p>
-          <span class="notification-time">2 hours ago</span>
-        </div>
-      </div>
-      <div class="notification-item unread">
-        <div class="notification-icon outbid">
-          <i class="fas fa-arrow-up"></i>
-        </div>
-        <div class="notification-content">
-          <h4>You've been outbid</h4>
-          <p>Canon EOS R5 Professional Camera - Current bid: $2,950.00</p>
-          <span class="notification-time">4 hours ago</span>
-        </div>
-      </div>
-      <div class="notification-item">
-        <div class="notification-icon outbid">
-          <i class="fas fa-arrow-up"></i>
-        </div>
-        <div class="notification-content">
-          <h4>You've been outbid</h4>
-          <p>PlayStation 5 Console Bundle - Current bid: $725.00</p>
-          <span class="notification-time">1 day ago</span>
-        </div>
-      </div>
-    </div>
-    <div class="notification-footer">
-      <button onclick="markAllAsRead()" class="mark-read-btn">Mark all as read</button>
     </div>
   </div>
 
@@ -216,10 +177,6 @@
         }
       });
       document.getElementById('name').innerHTML = '{{ name }}'
-      function toggleNotifications() {
-        const panel = document.getElementById('notificationPanel');
-        panel.classList.toggle('hidden');
-      }
     </script>
   </div>
 </body>

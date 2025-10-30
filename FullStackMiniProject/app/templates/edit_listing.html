@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Dashboard - BidHub</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link rel="stylesheet" href="../static/styles.css"/>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">
+      <i class="fas fa-gavel"></i> BidHub
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('buyer', id=id) }}">
+            <i class="fas fa-shopping-cart"></i> Buyer
+        </a>
+        <a href="{{ url_for('seller', id=id) }}" class="active">
+            <i class="fas fa-plus-circle"></i> Seller
+        </a>
+        <a href="{{ url_for('profile', edit=False) }}">
+            <i class="fas fa-user"></i> Profile
+      </a>
+    </div>
+    <div class="user-info">
+      <div class="notification-icon" onclick="toggleNotifications()">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge">3</span>
+      </div>
+      <span>Welcome, User!</span>
+      <a href="index.html" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+        <div class="seller-tabs">
+            <a href="{{ url_for('seller', id=id)}}" class="tab-btn" style="text-decoration: none;">
+                <button class="tab-btn">
+                    <i class="fas fa-plus-circle"></i>Create New Listing
+                </button>
+            </a>
+            <a href="{{ url_for('listing', id=id)}}" class="tab-btn active" style="text-decoration: none;">
+                <button class="tab-btn active">
+                    <i class="fas fa-edit"></i> Manage Listings
+                </button>
+            </a>
+        </div>
+        <div id="manageTab" class="tab-content">
+            <div class="page-header">
+                <h1><i class="fas fa-edit"></i> Manage Your Listings</h1>
+                <p>View and edit your active auction listings. Note: Updates are only allowed within the first third of the auction duration.</p>
+            </div>
+            <div class="listings-grid">
+                {% for listing in listings %}
+                <div class="listing-card {% if listing.is_editable %}editable{% else %}not-editable{% endif %}">
+                    <img class="listing-image" src="data:image/png;base64,{{ listing.image_base64 }}">
+                    <div class="listing-info">
+                        <h3>{{ listing.title }}</h3>
+                    <div class="listing-details">
+                        <span class="detail-item"><i class="fas fa-info-circle"></i>{{ listing.description }}</span>
+                        <span class="detail-item"><i class="fas fa-folder"></i> {{ listing.category }}</span>
+                        <span class="detail-item"><i class="fas fa-star"></i> {{ listing.condition }}</span>
+                    </div>
+                    </div>
+                    <div class="listing-meta">
+                        <span class="current-bid">Current Bid ₹{{ listing.price }}</span>
+                        <span class="time-left">{{ listing.time_left.days }} days {{ listing.time_left.seconds//3600 }} hours left</span>
+                    </div>
+                    <div class="time-status {% if listing.is_editable %}editable-status{% else %}locked-status{% endif %}">
+                    {% if listing.is_editable %}
+                        <i class="fas fa-edit"></i> Editable more than 1 day left
+                    {% else %}
+                        <i class="fas fa-lock"></i> Locked less than 1 day left
+                    {% endif %}
+                    </div>
+                    <div class="listing-actions">
+                        <button class="edit-btn {% if not listing.is_editable %}disabled{% endif %}" {% if listing.is_editable %} onclick="window.location.href=`{{ url_for('editListing', product_id=listing.product_id)}}`" {% else %}disabled title="Cannot edit - more than 1/3 of auction time has passed"{% endif %} style="width: 50%;">
+                        {% if listing.is_editable %}
+                            <i class="fas fa-edit"></i> Edit
+                        {% else %}
+                            <i class="fas fa-lock"></i> Locked
+                        {% endif %}
+                        </button>
+                        <button class="view-btn" onclick="window.location.href=`{{ url_for('viewListing', product_id=listing.product_id)}}`" style="width: 50%;">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+  <!-- Edit Listing Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-edit"></i> Edit Listing</h2>
+        <button class="close-modal" onclick="window.location.href=`{{ url_for('listing') }}`">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="edit-warning">
+          <i class="fas fa-info-circle"></i>
+          <p>You can only edit listings within the first third of the auction duration. After that, no changes are allowed to maintain fairness for bidders.</p>
+        </div>
+        
+        <form id="editForm" action="{{ url_for('updateListing', product_id=product.product_id) }}" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="editTitle">Product Title</label>
+            <input type="text" id="editTitle" name="title" required value="{{ product.title }}"/>
+          </div>
+          
+          <div class="form-group">
+            <label for="editDescription">Description</label>
+            <input id="editDescription" name="description" required value="{{ product.description }}"></input>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editCategory">Category</label>
+              <select id="editCategory" name="category" required>
+                <option value="electronics" {% if product.category == 'electronics' %} selected {% endif %}>Electronics</option>
+                <option value="fashion" {% if product.category == 'fashion' %} selected {% endif %}>Fashion</option>
+                <option value="home" {% if product.category == 'home' %} selected {% endif %}>Home & Garden</option>
+                <option value="sports" {% if product.category == 'sports' %} selected {% endif %}>Sports</option>
+                <option value="art" {% if product.category == 'art' %} selected {% endif %}>Art & Collectibles</option>
+                <option value="books" {% if product.category == 'books' %} selected {% endif %}>Books & Media</option>
+                <option value="jewelry" {% if product.category == 'jewelry' %} selected {% endif %}>Jewelry & Watches</option>
+                <option value="vehicles" {% if product.category == 'vehicles' %} selected {% endif %}>Vehicles</option>
+                <option value="other" {% if product.category == 'other' %} selected {% endif %}>Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="editCondition">Condition</label>
+              <select id="editCondition" name="condition" required>
+                <option value="new" {% if product.condition == 'new' %} selected {% endif %}>New</option>
+                <option value="like-new" {% if product.condition == 'like-new' %} selected {% endif %}>Like New</option>
+                <option value="excellent" {% if product.condition == 'excellent' %} selected {% endif %}>Excellent</option>
+                <option value="good" {% if product.condition == 'good' %} selected {% endif %}>Good</option>
+                <option value="fair" {% if product.condition == 'fair' %} selected {% endif %}>Fair</option>
+                <option value="poor" {% if product.condition == 'poor' %} selected {% endif %}>Poor</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Change Image</label>
+            <input type="file" id="editImage" name="image" accept="image/*" />
+            <small>Leave empty to keep current image</small>
+          </div>
+          
+          <div class="restriction-note">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p><strong>Note:</strong> Starting price and auction duration cannot be changed once bidding has begun.</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-cancel" onclick="window.location.href=`{{ url_for('listing') }}`" type="button">Cancel</button>
+            <button class="btn-save" type="submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Image upload handler
+    document.getElementById("imageInput").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const uploadDiv = document.querySelector(".image-upload");
+        uploadDiv.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success-color)"></i>
+          <p style="color:var(--success-color)">Image uploaded: ${file.name}</p>
+          <small>Click to change image</small>`;
+      }
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('editModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeEditModal();
+      }
+    });
+
+    function closeEditModal(){
+      window.location.href="{{ url_for('listing') }}"
+    }
+  </script>
+</body>
+</html>
