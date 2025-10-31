@@ -10,10 +10,6 @@
   />
   <link rel="stylesheet" href="../static/styles.css"/>
   <script>
-    function toggleNotifications() {
-      const panel = document.getElementById('notificationPanel');
-      panel.classList.toggle('hidden');
-    }
 
     function editOn(){
       window.location.href = "{{ url_for('profile', edit=True) }}"
