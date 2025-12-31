@@ -1,0 +1,8 @@
+{"txn_id": "TXN_1_1767070632.172373", "status": "BEGIN", "operation_type": "CREATE_USER", "timestamp": "2025-12-30T10:27:12.172389", "user_id": null, "data": {}}
+{"txn_id": "TXN_1_1767070632.172373", "status": "ABORT", "timestamp": "2025-12-30T10:27:12.174976", "reason": "Object of type datetime is not JSON serializable"}
+{"txn_id": "TXN_2_1767070632.230042", "status": "BEGIN", "operation_type": "CREATE_USER", "timestamp": "2025-12-30T10:27:12.230054", "user_id": null, "data": {}}
+{"txn_id": "TXN_2_1767070632.230042", "status": "ABORT", "timestamp": "2025-12-30T10:27:12.231397", "reason": "Object of type datetime is not JSON serializable"}
+{"txn_id": "TXN_3_1767070664.471838", "status": "BEGIN", "operation_type": "CREATE_USER", "timestamp": "2025-12-30T10:27:44.471849", "user_id": null, "data": {}}
+{"txn_id": "TXN_3_1767070664.471838", "status": "ABORT", "timestamp": "2025-12-30T10:27:44.473366", "reason": "Object of type datetime is not JSON serializable"}
+{"txn_id": "TXN_4_1767070664.51871", "status": "BEGIN", "operation_type": "CREATE_USER", "timestamp": "2025-12-30T10:27:44.518724", "user_id": null, "data": {}}
+{"txn_id": "TXN_4_1767070664.51871", "status": "ABORT", "timestamp": "2025-12-30T10:27:44.520130", "reason": "Object of type datetime is not JSON serializable"}

@@ -1,0 +1,2 @@
+{"txn_id": "TXN_1_1767070721.65308", "status": "BEGIN", "operation_type": "CREATE_USER", "timestamp": "2025-12-30T10:28:41.653114", "user_id": null, "data": {}}
+{"txn_id": "TXN_2_1767070721.837651", "status": "BEGIN", "operation_type": "CREATE_USER", "timestamp": "2025-12-30T10:28:41.837672", "user_id": null, "data": {}}
